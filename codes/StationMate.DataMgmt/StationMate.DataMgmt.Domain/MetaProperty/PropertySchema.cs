@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StationMate.DataMgmt.MetaProperty
 {
@@ -6,13 +7,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// 元数据属性配置
     /// 随实体元数据配置持久化
     /// </summary>
-    public abstract class PropertyProtoBase
+    public abstract class PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public PropertyProtoBase(string propertyName)
+        public PropertySchemaBase(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName))
                 throw new ArgumentNullException(nameof(propertyName));
@@ -41,13 +42,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 整型属性配置
     /// </summary>
-    public sealed class IntegarProto : PropertyProtoBase
+    public sealed class IntegarSchema : PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public IntegarProto(string propertyName) : base(propertyName)
+        public IntegarSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -59,13 +60,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 字符串属性配置
     /// </summary>
-    public abstract class StringProtoBase : PropertyProtoBase
+    public abstract class StringSchemaBase : PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        protected StringProtoBase(string propertyName) : base(propertyName)
+        protected StringSchemaBase(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -81,13 +82,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 短文本属性配置
     /// </summary>
-    public class ShortTextProto : StringProtoBase 
+    public class ShortTextSchema : StringSchemaBase 
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public ShortTextProto(string propertyName) : base(propertyName)
+        public ShortTextSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -99,13 +100,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 长文本属性配置
     /// </summary>
-    public class LongTextProto : StringProtoBase
+    public class LongTextSchema : StringSchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        private LongTextProto(string propertyName) : base(propertyName)
+        private LongTextSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -113,7 +114,7 @@ namespace StationMate.DataMgmt.MetaProperty
         /// </summary>
         /// <param name="propertyName">属性名称</param>
         /// /// <param name="textLength">文本长度</param>
-        public LongTextProto(string propertyName, int textLength) : this(propertyName)
+        public LongTextSchema(string propertyName, int textLength) : this(propertyName)
         {
             this.TextLength = textLength;
         }
@@ -127,13 +128,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 值对象属性配置
     /// </summary>
-    public sealed class ValueObjectProto : PropertyProtoBase
+    public sealed class ValueObjectSchema : PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public ValueObjectProto(string propertyName) : base(propertyName)
+        public ValueObjectSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -145,13 +146,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 布尔属性配置
     /// </summary>
-    public sealed class BooleanProto : PropertyProtoBase
+    public sealed class BooleanSchema : PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public BooleanProto(string propertyName) : base(propertyName)
+        public BooleanSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -163,13 +164,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 浮点属性配置
     /// </summary>
-    public sealed class FloatProto : PropertyProtoBase
+    public sealed class FloatSchema : PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public FloatProto(string propertyName) : base(propertyName)
+        public FloatSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -181,13 +182,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 日期属性配置
     /// </summary>
-    public sealed class DateTimeProto : PropertyProtoBase
+    public sealed class DateTimeSchema : PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public DateTimeProto(string propertyName) : base(propertyName)
+        public DateTimeSchema(string propertyName) : base(propertyName)
         {
         }
 
@@ -196,7 +197,7 @@ namespace StationMate.DataMgmt.MetaProperty
         /// </summary>
         /// <param name="propertyName">属性名称</param>
         /// <param name="dateFormat">日期格式</param>
-        public DateTimeProto(string propertyName, DateFormat dateFormat) : this(propertyName)
+        public DateTimeSchema(string propertyName, DateFormat dateFormat) : this(propertyName)
         {
             this.DateFormat = dateFormat;
         }
@@ -222,13 +223,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 列表基础属性配置
     /// </summary>
-    public abstract class OptionalProtoBase: PropertyProtoBase
+    public abstract class OptionalSchemaBase: PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        private OptionalProtoBase(string propertyName) : base(propertyName)
+        private OptionalSchemaBase(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -236,7 +237,7 @@ namespace StationMate.DataMgmt.MetaProperty
         /// </summary>
         /// <param name="propertyName">属性名称</param>
         /// <param name="options">可供选择项列表</param>
-        public OptionalProtoBase(string propertyName, HashSet<string> options) : this(propertyName)
+        public OptionalSchemaBase(string propertyName, HashSet<string> options) : this(propertyName)
         {
             AvailableOptions = options;
         }
@@ -249,14 +250,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 单选列表属性配置
     /// </summary>
-    public sealed class OptionProto : OptionalProtoBase
+    public sealed class OptionSchema : OptionalSchemaBase
     {
         /// <summary>
         /// 包含属性名称与可供选择项列表的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
         /// <param name="options">可供选择项列表</param>
-        public OptionProto(string propertyName, HashSet<string> options) : base(propertyName, options)
+        public OptionSchema(string propertyName, HashSet<string> options) : base(propertyName, options)
         {
         }
         /// <summary>
@@ -268,14 +269,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 多选列表属性配置
     /// </summary>
-    public sealed class OptionsProto : OptionalProtoBase
+    public sealed class OptionsSchema : OptionalSchemaBase
     {
         /// <summary>
         /// 包含属性名称与可供选择项列表的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
         /// <param name="options">可供选择项列表</param>
-        public OptionsProto(string propertyName, HashSet<string> options) : base(propertyName, options)
+        public OptionsSchema(string propertyName, HashSet<string> options) : base(propertyName, options)
         {
         }
 
@@ -288,13 +289,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 字典基础属性配置
     /// </summary>
-    public abstract class DictionalProtoBase : PropertyProtoBase
+    public abstract class DictionalSchemaBase : PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        private DictionalProtoBase(string propertyName) : base(propertyName)
+        private DictionalSchemaBase(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -302,7 +303,7 @@ namespace StationMate.DataMgmt.MetaProperty
         /// </summary>
         /// <param name="propertyName">属性名称</param>
         /// <param name="pairs">可供选择项列表</param>
-        public DictionalProtoBase(string propertyName, Dictionary<string, string> pairs) : this(propertyName)
+        public DictionalSchemaBase(string propertyName, Dictionary<string, string> pairs) : this(propertyName)
         {
             AvailablPairs = pairs;
         }
@@ -316,14 +317,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 单选字典属性配置
     /// </summary>
-    public sealed class TupleProto : DictionalProtoBase
+    public sealed class TupleSchema : DictionalSchemaBase
     {
         /// <summary>
         /// 包含属性名称与可供选择项列表的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
         /// <param name="pairs">可供选择项列表</param>
-        public TupleProto(string propertyName, Dictionary<string, string> pairs) : base(propertyName, pairs)
+        public TupleSchema(string propertyName, Dictionary<string, string> pairs) : base(propertyName, pairs)
         {
         }
         /// <summary>
@@ -335,14 +336,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 多选字典属性配置
     /// </summary>
-    public sealed class DictionsProto : DictionalProtoBase
+    public sealed class DictionsSchema : DictionalSchemaBase
     {
         /// <summary>
         /// 包含属性名称与可供选择项列表的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
         /// <param name="pairs">可供选择项列表</param>
-        public DictionsProto(string propertyName, Dictionary<string, string> pairs) : base(propertyName, pairs)
+        public DictionsSchema(string propertyName, Dictionary<string, string> pairs) : base(propertyName, pairs)
         {
         }
         /// <summary>
@@ -354,19 +355,19 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 资源属性配置
     /// </summary>
-    public abstract class ResourcePropProtoBase: PropertyProtoBase
+    public abstract class ResourcePropSchemaBase: PropertySchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        protected ResourcePropProtoBase(string propertyName) : base(propertyName)
+        protected ResourcePropSchemaBase(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
         /// 属性类型，统一为资源原型
         /// </summary>
-        new public Type PropertyType { get; protected set; } = typeof(ResourcePropProtoBase);
+        new public Type PropertyType { get; protected set; } = typeof(ResourcePropSchemaBase);
         /// <summary>
         /// 资源类型
         /// </summary>
@@ -411,13 +412,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 图像资源属性配置
     /// </summary>
-    public class ImagePropProto : ResourcePropProtoBase
+    public class ImagePropSchema : ResourcePropSchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public ImagePropProto(string propertyName) : base(propertyName)
+        public ImagePropSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -429,13 +430,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 文件资源属性配置
     /// </summary>
-    public class FilePropProto : ResourcePropProtoBase
+    public class FilePropSchema : ResourcePropSchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public FilePropProto(string propertyName) : base(propertyName)
+        public FilePropSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -447,13 +448,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 表格资源属性配置
     /// </summary>
-    public class TablePropProto : ResourcePropProtoBase
+    public class TablePropSchema : ResourcePropSchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public TablePropProto(string propertyName) : base(propertyName)
+        public TablePropSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -465,13 +466,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 音频资源属性配置
     /// </summary>
-    public class AudioPropProto : ResourcePropProtoBase
+    public class AudioPropSchema : ResourcePropSchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public AudioPropProto(string propertyName) : base(propertyName)
+        public AudioPropSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -483,13 +484,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 压缩文件资源属性配置
     /// </summary>
-    public class CompressedFilePropProto : ResourcePropProtoBase
+    public class CompressedFilePropSchema : ResourcePropSchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public CompressedFilePropProto(string propertyName) : base(propertyName)
+        public CompressedFilePropSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -501,13 +502,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 视频文件资源属性配置
     /// </summary>
-    public class VideoPropProto : ResourcePropProtoBase
+    public class VideoPropSchema : ResourcePropSchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public VideoPropProto(string propertyName) : base(propertyName)
+        public VideoPropSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>
@@ -519,13 +520,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 网络文件资源属性配置
     /// </summary>
-    public class H5PropProto : ResourcePropProtoBase
+    public class H5PropSchema : ResourcePropSchemaBase
     {
         /// <summary>
         /// 包含属性名称的构造
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        public H5PropProto(string propertyName) : base(propertyName)
+        public H5PropSchema(string propertyName) : base(propertyName)
         {
         }
         /// <summary>

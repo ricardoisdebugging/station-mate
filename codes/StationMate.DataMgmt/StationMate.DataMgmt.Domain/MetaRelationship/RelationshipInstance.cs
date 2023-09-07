@@ -3,7 +3,7 @@
     /// <summary>
     /// 元数据关联实例
     /// </summary>
-    public class RelationshipImpl
+    public class RelationshipInstance
     {
         /// <summary>
         /// 索引号
@@ -12,11 +12,11 @@
         /// <summary>
         /// 源实体实例索引
         /// </summary>
-        public int SourceEntityImplId { get; set; }
+        public int SourceEntityId { get; set; }
         /// <summary>
         /// 目标实体实例索引
         /// </summary>
-        public int TargetEntityImplId { get; set; }
+        public int TargetEntityId { get; set; }
         /// <summary>
         /// 关联关系
         /// 源实体 -> 目标实体

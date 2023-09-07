@@ -1,25 +1,28 @@
-﻿using StationMate.DataMgmt.MetaProperty;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using StationMate.DataMgmt.MetaProperty;
 
 namespace StationMate.DataMgmt.MetaObject
 {
     /// <summary>
     /// 元数据对象配置
     /// </summary>
-    public abstract class ObjectProtoBase
+    public abstract class ObjectSchemaBase
     {
         /// <summary>
         /// 包含对外展示的名字以及对内使用的名字的构造
         /// </summary>hao
         /// <param name="displayName">对外展示的名字</param>
-        /// <param name="protoName">对内使用的名字</param>
-        public ObjectProtoBase(DisplayName displayName, ProtoName protoName)
+        /// <param name="entityName">对内使用的名字</param>
+        public ObjectSchemaBase(DisplayName displayName, EntityName entityName)
         {
             if (displayName is null || string.IsNullOrEmpty(displayName.Value))
                 throw new ArgumentNullException(nameof(displayName));
-            if (protoName is null || string.IsNullOrEmpty(protoName.Value))
-                throw new ArgumentNullException(nameof(protoName));
+            if (entityName is null || string.IsNullOrEmpty(entityName.Value))
+                throw new ArgumentNullException(nameof(entityName));
 
-            this.ProtoName = protoName;
+            this.EntityName = entityName;
             this.DisplayName = displayName;
         }
         /// <summary>
@@ -37,16 +40,16 @@ namespace StationMate.DataMgmt.MetaObject
         /// Pascal风格命名，特殊符使用与C#命名规范一致
         /// 不可修改
         /// </summary>
-        public ProtoName ProtoName { get; protected set; }
+        public EntityName EntityName { get; protected set; }
         /// <summary>
         /// 元数据属性配置列表
         /// </summary>
-        public List<PropertyProtoBase> Properties { get; private set; }
+        public List<PropertySchemaBase> Properties { get; private set; }
         /// <summary>
         /// 添加元数据属性配置列表
         /// </summary>
         /// <param name="properties">元数据属性配置列表</param>
-        public void AddProperties(List<PropertyProtoBase> properties)
+        public void AddProperties(List<PropertySchemaBase> properties)
         {
             if (properties is null || properties.Count == 0)
                 throw new ArgumentNullException(nameof(properties));
@@ -60,7 +63,7 @@ namespace StationMate.DataMgmt.MetaObject
         /// 添加元数据属性配置
         /// </summary>
         /// <param name="property">元数据属性配置</param>
-        public void AddProperty(PropertyProtoBase property)
+        public void AddProperty(PropertySchemaBase property)
         {
             if (property is null) 
                 throw new ArgumentNullException(nameof(property));
@@ -88,9 +91,9 @@ namespace StationMate.DataMgmt.MetaObject
     /// 不可修改
     /// Pascal风格命名，特殊符使用与C#命名规范一致
     /// </summary>
-    public sealed class ProtoName
+    public sealed class EntityName
     {
-        public ProtoName()
+        public EntityName()
         {
             //TODO: validation rule
         }

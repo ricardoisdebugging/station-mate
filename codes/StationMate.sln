@@ -5,11 +5,9 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StationMate", "StationMate\StationMate.csproj", "{0993638D-2D68-48FE-9E96-DFBF32139E82}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StationMate.DataMgmt", "StationMate.DataMgmt", "{E0468F22-A75B-451F-89E0-860F53FF34DF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3-Domain", "3-Domain", "{E0468F22-A75B-451F-89E0-860F53FF34DF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StationMate.DataMgmt.Domain", "StationMate.DataMgmt\StationMate.DataMgmt.Domain\StationMate.DataMgmt.Domain.csproj", "{77DF986D-8A06-46AE-BA8B-D19158085F2A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StationMate.DataMgmt.Application.Contract.Shared", "StationMate.DataMgmt\StationMate.DataMgmt.Application.Contract.Shared\StationMate.DataMgmt.Application.Contract.Shared.csproj", "{0915962C-03BA-4201-9B0D-432513BA6B36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,17 +23,12 @@ Global
 		{77DF986D-8A06-46AE-BA8B-D19158085F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77DF986D-8A06-46AE-BA8B-D19158085F2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77DF986D-8A06-46AE-BA8B-D19158085F2A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0915962C-03BA-4201-9B0D-432513BA6B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0915962C-03BA-4201-9B0D-432513BA6B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0915962C-03BA-4201-9B0D-432513BA6B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0915962C-03BA-4201-9B0D-432513BA6B36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{77DF986D-8A06-46AE-BA8B-D19158085F2A} = {E0468F22-A75B-451F-89E0-860F53FF34DF}
-		{0915962C-03BA-4201-9B0D-432513BA6B36} = {E0468F22-A75B-451F-89E0-860F53FF34DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B6F79495-ADB3-4440-AADD-5A3B7ECACCC4}

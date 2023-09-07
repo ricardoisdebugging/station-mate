@@ -1,4 +1,8 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Collections.Generic;
 
 namespace StationMate.DataMgmt.MetaProperty
 {
@@ -6,13 +10,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// 元数据属性实例
     /// 随实体实例化数据持久化
     /// </summary>
-    public abstract class PropertyImplBase
+    public abstract class PropertyInstanceBase
     {
         /// <summary>
         /// 包含元数据属性配置的构造
         /// </summary>
         /// <param name="propertyConf">元数据属性配置</param>
-        public PropertyImplBase(PropertyProtoBase propertyConf)
+        public PropertyInstanceBase(PropertySchemaBase propertyConf)
         {
             if (propertyConf is null || propertyConf.Id == 0)
                 throw new ArgumentNullException(nameof(propertyConf));
@@ -27,7 +31,7 @@ namespace StationMate.DataMgmt.MetaProperty
         /// <summary>
         /// 基础属性配置
         /// </summary>
-        public PropertyProtoBase PropertyConf { get; set; }
+        public PropertySchemaBase PropertyConf { get; set; }
         /// <summary>
         /// 属性值
         /// </summary>
@@ -50,14 +54,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 整型属性实例
     /// </summary>
-    public sealed class IntegarImpl : PropertyImplBase
+    public sealed class IntegarInstance : PropertyInstanceBase
     {
         private int? _propertyValue;
         /// <summary>
         /// 包含整型属性配置的构造
         /// </summary>
         /// <param name="propertyConf">整型属性配置</param>
-        public IntegarImpl(IntegarProto propertyConf): base(propertyConf) { }
+        public IntegarInstance(IntegarSchema propertyConf): base(propertyConf) { }
         /// <summary>
         /// 属性值，转化成整数型
         /// </summary>
@@ -79,13 +83,13 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 字符串属性实例
     /// </summary>
-    public abstract class StringImplBase : PropertyImplBase
+    public abstract class StringInstanceBase : PropertyInstanceBase
     {
         /// <summary>
         /// 包含字符串属性配置的构造
         /// </summary>
         /// <param name="propertyConf">字符串属性配置</param>
-        public StringImplBase(StringProtoBase propertyConf) : base(propertyConf) { }
+        public StringInstanceBase(StringSchemaBase propertyConf) : base(propertyConf) { }
 
         private string? _propertyValue;
         /// <summary>
@@ -98,7 +102,7 @@ namespace StationMate.DataMgmt.MetaProperty
             {
                 this.CheckNullable(value);
 
-                if (value.ToString().Length > (PropertyConf as StringProtoBase).TextLength)
+                if (value.ToString().Length > (PropertyConf as StringSchemaBase).TextLength)
                     throw new ArgumentException();
 
                 _propertyValue = value?.ToString() ?? string.Empty;
@@ -109,38 +113,38 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 短文本属性实例
     /// </summary>
-    public class ShortTextImpl : StringImplBase 
+    public class ShortTextInstance : StringInstanceBase 
     {
         /// <summary>
         /// 包含短文本属性配置的构造
         /// </summary>
         /// <param name="propertyConf">短文本属性配置</param>
-        public ShortTextImpl(ShortTextProto propertyConf) : base(propertyConf) { }
+        public ShortTextInstance(ShortTextSchema propertyConf) : base(propertyConf) { }
     }
 
     /// <summary>
     /// 长文本属性实例
     /// </summary>
-    public class LongTextImpl : StringImplBase 
+    public class LongTextInstance : StringInstanceBase 
     {
         /// <summary>
         /// 包含长文本属性配置的构造
         /// </summary>
         /// <param name="propertyConf">长文本属性配置</param>
-        public LongTextImpl(LongTextProto propertyConf) : base(propertyConf) { }
+        public LongTextInstance(LongTextSchema propertyConf) : base(propertyConf) { }
 }
 
     /// <summary>
     /// 值对象属性实例
     /// </summary>
-    public sealed class ValueObjectImpl : PropertyImplBase
+    public sealed class ValueObjectInstance : PropertyInstanceBase
     {
         private dynamic? _propertyValue;
         /// <summary>
         /// 包含值对象性配置的构造
         /// </summary>
         /// <param name="propertyConf">值对象属性配置</param>
-        public ValueObjectImpl(ValueObjectProto propertyConf) : base(propertyConf) { }
+        public ValueObjectInstance(ValueObjectSchema propertyConf) : base(propertyConf) { }
         /// <summary>
         /// 属性值，转化成动态类型
         /// </summary>
@@ -159,14 +163,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 布尔属性实例
     /// </summary>
-    public sealed class BooleanImpl : PropertyImplBase
+    public sealed class BooleanInstance : PropertyInstanceBase
     {
         private bool? _propertyValue;
         /// <summary>
         /// 包含布尔属性配置的构造
         /// </summary>
         /// <param name="propertyConf">布尔属性配置</param>
-        public BooleanImpl(BooleanProto propertyConf) : base(propertyConf) { }
+        public BooleanInstance(BooleanSchema propertyConf) : base(propertyConf) { }
         /// <summary>
         /// 属性值，转化成布尔型
         /// </summary>
@@ -188,14 +192,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 浮点属性实例
     /// </summary>
-    public sealed class FloatImpl : PropertyImplBase
+    public sealed class FloatInstance : PropertyInstanceBase
     {
         private float? _propertyValue;
         /// <summary>
         /// 包含浮点属性配置的构造
         /// </summary>
         /// <param name="propertyConf">浮点属性配置</param>
-        public FloatImpl(FloatProto propertyConf) : base(propertyConf) { }
+        public FloatInstance(FloatSchema propertyConf) : base(propertyConf) { }
         /// <summary>
         /// 属性值，转化成浮点型
         /// </summary>
@@ -217,14 +221,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 日期属性实例
     /// </summary>
-    public sealed class DateTimeImpl : PropertyImplBase
+    public sealed class DateTimeInstance : PropertyInstanceBase
     {
         private DateTime? _propertyValue;
         /// <summary>
         /// 包含日期属性配置的构造
         /// </summary>
         /// <param name="propertyConf">日期属性配置</param>
-        public DateTimeImpl(DateTimeProto propertyConf) : base(propertyConf) { }
+        public DateTimeInstance(DateTimeSchema propertyConf) : base(propertyConf) { }
         /// <summary>
         /// 属性值，转化成日期型
         /// </summary>
@@ -246,14 +250,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 单选列表属性实例
     /// </summary>
-    public sealed class OptionImpl : PropertyImplBase
+    public sealed class OptionInstance : PropertyInstanceBase
     {
         private string _propertyValue;
         /// <summary>
         /// 包含单选列表属性配置的构造
         /// </summary>
         /// <param name="propertyConf">单选列表属性配置</param>
-        public OptionImpl(OptionProto propertyConf) : base(propertyConf) { }
+        public OptionInstance(OptionSchema propertyConf) : base(propertyConf) { }
         /// <summary>
         /// 属性值，转化成字符串型
         /// </summary>
@@ -264,9 +268,9 @@ namespace StationMate.DataMgmt.MetaProperty
             {
                 this.CheckNullable(value);
 
-                if ((PropertyConf as OptionsProto).AvailableOptions.Count == 0)
+                if ((PropertyConf as OptionsSchema).AvailableOptions.Count == 0)
                     throw new InvalidOperationException();
-                if (!(PropertyConf as OptionsProto).AvailableOptions.Contains(value?.ToString()))
+                if (!(PropertyConf as OptionsSchema).AvailableOptions.Contains(value?.ToString()))
                     throw new ArgumentException();
 
                 _propertyValue = value?.ToString();
@@ -277,14 +281,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 多选列表属性实例
     /// </summary>
-    public sealed class OptionsImpl : PropertyImplBase
+    public sealed class OptionsInstance : PropertyInstanceBase
     {
         private HashSet<string> _propertyValue;
         /// <summary>
         /// 包含多选列表属性配置的构造
         /// </summary>
         /// <param name="propertyConf">多选列表属性配置</param>
-        public OptionsImpl(OptionsProto propertyConf) : base(propertyConf) { }
+        public OptionsInstance(OptionsSchema propertyConf) : base(propertyConf) { }
         /// <summary>
         /// 属性值，转化成哈希列表
         /// </summary>
@@ -295,11 +299,11 @@ namespace StationMate.DataMgmt.MetaProperty
             {
                 this.CheckNullable(value);
 
-                if ((PropertyConf as OptionsProto).AvailableOptions.Count == 0)
+                if ((PropertyConf as OptionsSchema).AvailableOptions.Count == 0)
                     throw new InvalidDataException();
 
                 if (value is not HashSet<string> ||
-                    !(value as HashSet<string>).All(x => (PropertyConf as OptionsProto).AvailableOptions.Contains(x)))
+                    !(value as HashSet<string>).All(x => (PropertyConf as OptionsSchema).AvailableOptions.Contains(x)))
                     throw new ArgumentException();
 
                 _propertyValue = value as HashSet<string>;
@@ -310,14 +314,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 单选字典属性实例
     /// </summary>
-    public sealed class TupleImpl : PropertyImplBase
+    public sealed class TupleInstance : PropertyInstanceBase
     {
         private Tuple<string, string> _propertyValue;
         /// <summary>
         /// 包含单选字典属性配置的构造
         /// </summary>
         /// <param name="propertyConf">单选字典属性配置</param>
-        public TupleImpl(TupleProto propertyConf) : base(propertyConf) { }
+        public TupleInstance(TupleSchema propertyConf) : base(propertyConf) { }
         /// <summary>
         /// 属性值，转化成二元元组
         /// </summary>
@@ -328,11 +332,11 @@ namespace StationMate.DataMgmt.MetaProperty
             {
                 this.CheckNullable(value);
 
-                if ((PropertyConf as TupleProto).AvailablPairs.Count == 0)
+                if ((PropertyConf as TupleSchema).AvailablPairs.Count == 0)
                     throw new InvalidOperationException();
 
                 if (value is not Tuple<string, string> || 
-                    !(PropertyConf as TupleProto).AvailablPairs.ContainsKey((value as Tuple<string, string>).Item1))
+                    !(PropertyConf as TupleSchema).AvailablPairs.ContainsKey((value as Tuple<string, string>).Item1))
                 throw new ArgumentException();
 
                 _propertyValue = value as Tuple<string, string>;
@@ -343,14 +347,14 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 多选字典属性实例
     /// </summary>
-    public sealed class DictionsImpl : PropertyImplBase
+    public sealed class DictionsInstance : PropertyInstanceBase
     {
         private Dictionary<string, string> _propertyValue;
         /// <summary>
         /// 包含多选字典属性配置的构造
         /// </summary>
         /// <param name="propertyConf">多选字典属性配置</param>
-        public DictionsImpl(DictionsProto propertyConf) : base(propertyConf) { }
+        public DictionsInstance(DictionsSchema propertyConf) : base(propertyConf) { }
         /// <summary>
         /// 属性值，转化成字典
         /// </summary>
@@ -361,11 +365,11 @@ namespace StationMate.DataMgmt.MetaProperty
             {
                 this.CheckNullable(value);
 
-                if ((PropertyConf as DictionsProto).AvailablPairs.Count == 0)
+                if ((PropertyConf as DictionsSchema).AvailablPairs.Count == 0)
                     throw new InvalidDataException();
 
                 if (value is not Dictionary<string, string> ||
-                    !(value as Dictionary<string, string>).All(x => (PropertyConf as DictionsProto).AvailablPairs.ContainsKey(x.Key)))
+                    !(value as Dictionary<string, string>).All(x => (PropertyConf as DictionsSchema).AvailablPairs.ContainsKey(x.Key)))
                     throw new ArgumentException();
 
                 _propertyValue = value as Dictionary<string, string>;
@@ -376,7 +380,7 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 资源属性实例
     /// </summary>
-    public abstract class ResourcePropImplBase : PropertyImplBase
+    public abstract class ResourcePropInstanceBase : PropertyInstanceBase
     {
         /// <summary>
         /// 资源字节流
@@ -386,7 +390,7 @@ namespace StationMate.DataMgmt.MetaProperty
         /// 包含资源属性配置的构造
         /// </summary>
         /// <param name="propertyConf">资源属性配置</param>
-        public ResourcePropImplBase(ResourcePropProtoBase propertyConf) : base(propertyConf) { }
+        public ResourcePropInstanceBase(ResourcePropSchemaBase propertyConf) : base(propertyConf) { }
         /// <summary>
         /// 属性值，转化字节流
         /// </summary>
@@ -412,24 +416,24 @@ namespace StationMate.DataMgmt.MetaProperty
     /// <summary>
     /// 图像资源属性实例
     /// </summary>
-    public sealed class ImagePropImpl : ResourcePropImplBase
+    public sealed class ImagePropInstance : ResourcePropInstanceBase
     {
         /// <summary>
         /// 包含图像资源属性配置的构造
         /// </summary>
         /// <param name="propertyConf">图像资源属性配置</param>
-        public ImagePropImpl(ImagePropProto propertyConf) : base(propertyConf) { }
+        public ImagePropInstance(ImagePropSchema propertyConf) : base(propertyConf) { }
     }
 
     /// <summary>
     /// 文件资源属性实例
     /// </summary>
-    public sealed class FilePropImpl : ResourcePropImplBase
+    public sealed class FilePropInstance : ResourcePropInstanceBase
     {
         /// <summary>
         /// 包含文件资源属性配置的构造
         /// </summary>
         /// <param name="propertyConf">文件资源属性配置</param>
-        public FilePropImpl(FilePropProto propertyConf) : base(propertyConf) { }
+        public FilePropInstance(FilePropSchema propertyConf) : base(propertyConf) { }
     }
 }
